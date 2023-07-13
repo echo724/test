@@ -1,6 +1,8 @@
 name: make_pr_format
 on:
-  pull_request
+  pull_request:
+    types:
+      - opened
 
 jobs:
   make_pr_format:
