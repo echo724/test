@@ -11,7 +11,7 @@ jobs:
       - name: append issue number and contents to pr body
         uses: actions/github-script@v4
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.ECHO_TOKEN }}
           script: |
             const pr = await github.pulls.get({
                 owner: context.repo.owner,
@@ -41,4 +41,4 @@ jobs:
         with:
           configuration-path: ".github/auto_assign.yml"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ECHO_TOKEN }}
