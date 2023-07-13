@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: append issue number and contents to pr body
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.ECHO_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const pr = await github.rest.pulls.get({
               owner: context.repo.owner,
