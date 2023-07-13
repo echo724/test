@@ -2,8 +2,7 @@ name: make_pr_format
 on:
   pull_request:
     types: [ opened ]
-    branches-ignore:
-      - main
+
 jobs:
   make_pr_format:
     runs-on: ubuntu-latest

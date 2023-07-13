@@ -1,0 +1,15 @@
+addReviewers: true
+addAssignees: false
+numberOfReviewers: 2
+useReviewGroups: true
+reviewGroups:
+ front:
+  - jeonjeunghoon
+  - nangkyeonglim
+  - yogjin
+ back:
+  - HubCreator
+  - echo724
+  - ezzanzzan
+  - ingpyo
+useAssigneeGroups: false
