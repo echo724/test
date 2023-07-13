@@ -10,18 +10,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: append issue number and contents to pr body
-        uses: actions/github-script@v4
+        uses: actions/github-script@v5
         with:
           github-token: ${{ secrets.ECHO_TOKEN }}
           script: |
-            const pr = await github.pulls.get({
+            const pr = await github.rest.pulls.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.issue.number
             });
             # find issue number from 'feat/foo-bar-1234' branch name where 1234 is issueNumber
             const issueNumber = pr.data.head.ref.match(/.*-(\d+)/)[1];
-            const issue = await github.issues.get({
+            const issue = await github.rest.issues.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: issueNumber
@@ -31,7 +31,7 @@ jobs:
             const tasks = issueBody.match(/### ✅ Tasks\n- \[ \] .*\n/g);
 
             const newBody = `### 🛠️ Issue\n\n- close {issueNumber}\n\n### ✅ Tasks ${tasks.join('')}\n\n### ⏰ Time Difference\n\n- \n\n### 📝 Note\n\n- `;
-            await github.pulls.update({
+            await github.rest.pulls.update({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.issue.number,
