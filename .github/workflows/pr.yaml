@@ -1,7 +1,6 @@
 name: make_pr_format
 on:
-  pull_request:
-    types: [ opene ]
+  pull_request
 
 jobs:
   make_pr_format:
