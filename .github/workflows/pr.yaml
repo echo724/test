@@ -12,7 +12,6 @@ jobs:
       - name: append issue number and contents to pr body
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const pr = await github.rest.pulls.get({
               owner: context.repo.owner,
@@ -30,7 +29,7 @@ jobs:
             # find all tasks as multiple literals like "- [ ] task1\n - [ ] task2\n" under '### ✅ Tasks' section
             const tasks = issueBody.match(/### ✅ Tasks\n- \[ \] .*\n/g);
 
-            const newBody = `### 🛠️ Issue\n\n- close {issueNumber}\n\n### ✅ Tasks ${tasks.join('')}\n\n### ⏰ Time Difference\n\n- \n\n### 📝 Note\n\n- `;
+            const newBody = `### 🛠️ Issue\n\n- close ${issueNumber}\n\n### ✅ Tasks\n\n${tasks.join('\n')}\n\n### ⏰ Time Difference\n\n- \n\n### 📝 Note\n\n- `;
             await github.rest.pulls.update({
               owner: context.repo.owner,
               repo: context.repo.repo,
