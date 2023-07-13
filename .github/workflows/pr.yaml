@@ -1,0 +1,44 @@
+name: make_pr_format
+on:
+  pull_request:
+    types: [ opened ]
+    branches-ignore:
+      - main
+jobs:
+  make_pr_format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: append issue number and contents to pr body
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = await github.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.issue.number
+            });
+            const body = pr.data.body;
+            const issueNumber = pr.data.head.ref.split('/').pop();
+            
+            // Get issue
+            const issue = await github.issues.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber
+            });
+            const issueBody = issue.data.body;
+            const newBody = body + "\n\n" + "close #" + issueNumber + "\n\n" + issueBody;
+            
+            await github.pulls.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: context.issue.number,
+                  body: newBody
+              });
+      - name: assign reviewers
+        uses: kentaro-m/auto-assign-action@v1.2.5
+        with:
+          configuration-path: ".github/auto_assign.yml"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
