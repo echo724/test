@@ -1,7 +1,7 @@
 name: make_pr_format
 on:
   pull_request:
-    types: [ opened ]
+    types: [ opene ]
 
 jobs:
   make_pr_format:
@@ -13,31 +13,25 @@ jobs:
           github-token: ${{ secrets.ECHO_TOKEN }}
           script: |
             const pr = await github.pulls.get({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                pull_number: context.issue.number
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
             });
-            const body = pr.data.body;
-            const issueNumber = pr.data.head.ref.split('/').pop();
-            
-            // Get issue
+            # find issue number from 'feat/foo-bar-1234' branch name where 1234 is issueNumber
+            const issueNumber = pr.data.head.ref.match(/.*-(\d+)/)[1];
             const issue = await github.issues.get({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: issueNumber
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber
             });
             const issueBody = issue.data.body;
-            const newBody = body + "\n\n" + "close #" + issueNumber + "\n\n" + issueBody;
-            
+            # find all tasks as multiple literals like "- [ ] task1\n - [ ] task2\n" under '### ✅ Tasks' section
+            const tasks = issueBody.match(/### ✅ Tasks\n- \[ \] .*\n/g);
+
+            const newBody = `### 🛠️ Issue\n\n- close {issueNumber}\n\n### ✅ Tasks ${tasks.join('')}\n\n### ⏰ Time Difference\n\n- \n\n### 📝 Note\n\n- `;
             await github.pulls.update({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  pull_number: context.issue.number,
-                  body: newBody
-              });
-      - name: assign reviewers
-        uses: kentaro-m/auto-assign-action@v1.2.5
-        with:
-          configuration-path: ".github/auto_assign.yml"
-        env:
-          GITHUB_TOKEN: ${{ secrets.ECHO_TOKEN }}
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              body: newBody
+            });
