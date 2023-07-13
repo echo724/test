@@ -25,7 +25,7 @@ jobs:
               issue_number: issueNumber
             });
             const issueBody = issue.data.body;
-            const task_list = issueBody.match((?<=### ✅ Tasks\n- \[ \] ).*);
+            const task_list = issueBody.match(/(?<=### ✅ Tasks\n- \[ \]).*/g);
             const tasks = task_list.join('\n- [ ] ');
             
             const newBody = `### 🛠️ Issue\n\n- close #${issueNumber}\n\n### ✅ Tasks\n\n${tasks}\n\n### ⏰ Time Difference\n\n- \n\n### 📝 Note\n\n- `;
