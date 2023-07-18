@@ -25,7 +25,7 @@ jobs:
               issue_number: issueNumber
             });
             const issueBody = issue.data.body;
-            const task_list = issueBody.match(/((- \[ \]).*/g);
+            const task_list = issueBody.match(/(- \[ \]).*/g);
             console.log(task_list)
             const newBody = `### 🛠️ Issue\n\n- close #${issueNumber}\n\n### ✅ Tasks\n\n${task_list}\n\n### ⏰ Time Difference\n\n- \n\n### 📝 Note\n\n- `;
             await github.rest.pulls.update({
